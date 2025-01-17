@@ -28,9 +28,9 @@ def taskCreator():
 
 def displayTasks(specific):
     if specific:
-        display = input('what table do you want the tasks from?\n')
-        displaySQL = f"SELECT * FROM {display}"
         while True:
+            display = input('what table do you want the tasks from?\n')
+            displaySQL = f"SELECT * FROM {display}"
             try:
                 cursor.execute(displaySQL)
                 result = cursor.fetchall()
@@ -68,6 +68,8 @@ while True:
                     specific = False
                     displayTasks(specific)
                     break
+        if int(option) == 2:
+            taskCreator()
     elif int(selection) ==3:
         print("Project Manager: You can...\n1.) Add new project\n2.) View existing projects\n3.) Edit Existing Projects")
     elif selection == "e" or selection == "exit":
@@ -78,11 +80,11 @@ while True:
     # //cursor.execute('''CREATE TABLE IF NOT EXISTS '''
     # )
     # cursor.execute('''CREATE TABLE IF NOT EXISTS activity(id integer NOT NULL, type text NOT NULL, project text, name text NOT NULL)''');
-    display = input('what table do you want the tasks from?\n')
-    displaySQL = f"SELECT * FROM {display}"
-    cursor.execute(displaySQL)
-    result = cursor.fetchall()
-    print(result)
+    # display = input('what table do you want the tasks from?\n')
+    # displaySQL = f"SELECT * FROM {display}"
+    # cursor.execute(displaySQL)
+    # result = cursor.fetchall()
+    # print(result)
 
 conn.commit()
 
