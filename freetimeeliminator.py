@@ -13,15 +13,7 @@ def getTaskID(tablename):
     cursor.execute(tableRows)
     return(len(cursor.fetchall()))
 
-#getTaskID("zombieapocalypse")
-
-print("Do you have some freetime you would like to use wisely?\nWell never fear the FreeTimeAssassin is here!")
-selection = int(input("Here you can input tasks or hobbies, assign them to projects, and randomly generate them as you please!\nWhat would you like to do?: \n1.) >Create a new task\n2.) >View current tasks\n3.) >Manage projects\n(input h for help)"))
-
-
-if selection == "h" or selection == "help":
-    print("coming soon...")
-elif selection == 1:
+def taskCreator():
     task = input("you have chosen to add a task: \nTask Name: ")
     taskcat = input("what kind of task is it?")
     minutes = int(input("How many minutes will it take?"))
@@ -32,18 +24,65 @@ elif selection == 1:
     cursor.execute(addTask, (taskID, task, minutes))
     taskCount = getTaskID(taskcat)
     print("There are now " + str(taskCount) + " tasks in the table " + taskcat)
-elif selection == 2:
-    generate = input("I am the generator (not ai though)... I can generate anything you like...\n1.) random task \n2.) project task \n3.) cant choose a project? i'll choose one for you! ")
-elif selection ==3:
-    print("Project Manager: You can...\n1.) Add new project\n2.) View existing projects\n3.) Edit Existing Projects")
-# //cursor.execute('''CREATE TABLE IF NOT EXISTS '''
-# )
-# cursor.execute('''CREATE TABLE IF NOT EXISTS activity(id integer NOT NULL, type text NOT NULL, project text, name text NOT NULL)''');
-display = input('what table do you want the tasks from?\n')
-displaySQL = f"SELECT * FROM {display}"
-cursor.execute(displaySQL)
-result = cursor.fetchall()
-print(result)
+#getTaskID("zombieapocalypse")
+
+def displayTasks(specific):
+    if specific:
+        display = input('what table do you want the tasks from?\n')
+        displaySQL = f"SELECT * FROM {display}"
+        while True:
+            try:
+                cursor.execute(displaySQL)
+                result = cursor.fetchall()
+                print(result)
+                break
+            except sqlite3.Error as e:
+                print("" + str(e))
+    else:
+        print("im supposed to display all tables and their options")
+
+while True:
+
+    selection = input("Hello there! Do you have some free time you'd like to get rid of? Well never fear the FreeTimeAssassin is here!\nWhat would you like to do? (enter h for help and e for exit)\n1.) Spend some time (generate a task)\n2.) Manage Tasks\n3.) Manage Task Categories\n")
+
+
+    if selection == "h" or selection == "help":
+        print("coming soon...")
+    elif selection == "e" or selection == "exit":
+        print("exiting now...")
+        break
+    elif int(selection) == 1:
+        generate = input("I am the generator (not ai though)... I can generate anything you like...\n1.) random task \n2.) project task \nWhat would you like?\n")
+    elif int(selection) == 2:
+        option = input("This is the task manager!\nWhat would you like to do?\n1.) Display Current Tasks \n2.) Add Task\n3.) Delete Task ")
+        if int(option) ==   1:
+            specific = True
+            while True:
+                check = input("Did you have a specific category in mind? (Y/n)(Enter L to list categories)")
+                if check == "L":
+                    print("i am supposed to list all tables")
+                elif check == "y":
+                    displayTasks(specific)
+                    break
+                else:
+                    specific = False
+                    displayTasks(specific)
+                    break
+    elif int(selection) ==3:
+        print("Project Manager: You can...\n1.) Add new project\n2.) View existing projects\n3.) Edit Existing Projects")
+    elif selection == "e" or selection == "exit":
+        print("exiting now...")
+        break
+    else:
+        print("sorry I dont understand")
+    # //cursor.execute('''CREATE TABLE IF NOT EXISTS '''
+    # )
+    # cursor.execute('''CREATE TABLE IF NOT EXISTS activity(id integer NOT NULL, type text NOT NULL, project text, name text NOT NULL)''');
+    display = input('what table do you want the tasks from?\n')
+    displaySQL = f"SELECT * FROM {display}"
+    cursor.execute(displaySQL)
+    result = cursor.fetchall()
+    print(result)
 
 conn.commit()
 
