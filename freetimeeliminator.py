@@ -29,10 +29,16 @@ def taskCreator():
 def displayTasks(specific):
     if specific:
         while True:
-            display = input('what table do you want the tasks from?\n')
-            display =  "\"\";drop table tasks;"
-            displaySQL = f"SELECT * FROM {display}"
             try:
+                while True:
+                    display = input('what table do you want the tasks from?\n')
+                    try:
+                        if not display.isalnum():
+                            raise ValueError("dont try to inject me >:(")
+                        break
+                    except ValueError as ve:
+                        print(""+str(ve))
+                displaySQL = f"SELECT * FROM {display}"
                 cursor.execute(displaySQL)
                 result = cursor.fetchall()
                 print(result)
