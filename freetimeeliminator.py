@@ -13,6 +13,11 @@ def getTaskID(tablename):
     cursor.execute(tableRows)
     return(len(cursor.fetchall()))
 
+def displayTables():
+    getTables = f"SELECT name FROM sqlite_master WHERE type='table'"
+    cursor.execute(getTables)
+    print(str(cursor.fetchall()))
+
 def taskCreator():
     task = input("you have chosen to add a task: \nTask Name: ")
     taskcat = input("what kind of task is it?")
@@ -26,31 +31,45 @@ def taskCreator():
     print("There are now " + str(taskCount) + " tasks in the table " + taskcat)
 #getTaskID("zombieapocalypse")
 
+def sanitaryInput(question):
+    while True:
+        output = input(str(question))
+        try:
+            if not output.isalnum():
+                raise ValueError("Don't try to inject me! >:(")
+            else:
+                return output
+        except ValueError as ve:
+            print(""+str(ve))
+
 def displayTasks(specific):
     if specific:
         while True:
             try:
-                while True:
-                    display = input('what table do you want the tasks from?\n')
-                    try:
-                        if not display.isalnum():
-                            raise ValueError("dont try to inject me >:(")
-                        break
-                    except ValueError as ve:
-                        print(""+str(ve))
+                # while True:
+                #     display = input('what table do you want the tasks from?\n')
+                #     try:
+                #         if not display.isalnum():
+                #             raise ValueError("dont try to inject me >:(")
+                #         break
+                #     except ValueError as ve:
+                #         print(""+str(ve))
+                display = sanitaryInput('What table do you want the tasks from?\n')
                 displaySQL = f"SELECT * FROM {display}"
                 cursor.execute(displaySQL)
                 result = cursor.fetchall()
-                print(result)
+                print(str(result) + "\n")
                 break
             except sqlite3.Error as e:
                 print("" + str(e))
     else:
         print("im supposed to display all tables and their options")
 
+print("Hello there! Do you have some free time you'd like to get rid of? Well never fear, the FreeTimeAssassin is here!")
+
 while True:
 
-    selection = input("Hello there! Do you have some free time you'd like to get rid of? Well never fear the FreeTimeAssassin is here!\nWhat would you like to do? (enter h for help and e for exit)\n1.) Spend some time (generate a task)\n2.) Manage Tasks\n3.) Manage Task Categories\n")
+    selection = input("What would you like to do? (enter h for help and e for exit)\n1.) Spend some time (generate a task)\n2.) Manage Tasks\n3.) Manage Task Categories\n")
 
 
     if selection == "h" or selection == "help":
@@ -67,7 +86,7 @@ while True:
             while True:
                 check = input("Did you have a specific category in mind? (Y/n)(Enter L to list categories)")
                 if check == "L":
-                    print("i am supposed to list all tables")
+                    displayTables()
                 elif check == "y":
                     displayTasks(specific)
                     break
