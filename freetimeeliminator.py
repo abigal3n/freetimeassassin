@@ -1,5 +1,4 @@
 import sqlite3
-import activitymanager
 conn = sqlite3.connect("/home/galen/data/freetime_eliminator.db")
 
 cursor = conn.cursor()
@@ -8,15 +7,15 @@ def minibox_manager(choice):
     if choice == 1:
         return
 
-def getTaskID(tablename):
+def getActivityID(tablename):
     tableRows = f"SELECT * FROM {tablename}"
     cursor.execute(tableRows)
     return(len(cursor.fetchall()))
 
-# def displayTables():
-#     getTables = f"SELECT name FROM sqlite_master WHERE type='table'"
-#     cursor.execute(getTables)
-#     print(str(cursor.fetchall()))
+def displayTables():
+    getTables = f"SELECT name FROM sqlite_master WHERE type='table'"
+    cursor.execute(getTables)
+    print(str(cursor.fetchall()))
 
 def returnTables():
     tables = f"SELECT name FROM sqlite_master WHERE type='table'"
@@ -24,7 +23,7 @@ def returnTables():
     tables = cursor.fetchall()
     return [table[0] for table in tables]
 
-def taskCreator():
+def activityCreator():
     task = input("you have chosen to add a task: \nTask Name: ")
     taskcat = input("what kind of task is it?")
     minutes = int(input("How many minutes will it take?"))
@@ -48,7 +47,7 @@ def sanitaryInput(question):
         except ValueError as ve:
             print(""+str(ve))
 
-def displayTasks(specific):
+def displayActivities(specific):
     if specific:
         while True:
             try:
@@ -98,16 +97,16 @@ while True:
             while True:
                 check = input("Did you have a specific category in mind? (Y/n)(Enter L to list categories)")
                 if check == "L":
-                    activitymanager.displayTables()
+                    displayTables()
                 elif check == "y":
-                    displayTasks(specific)
+                    displayActivities(specific)
                     break
                 else:
                     specific = False
-                    displayTasks(specific)
+                    displayActivities(specific)
                     break
         if int(option) == 2:
-            taskCreator()
+            activityCreator()
     elif int(selection) ==3:
         print("Project Manager: You can...\n1.) Add new project\n2.) View existing projects\n3.) Edit Existing Projects")
     elif selection == "e" or selection == "exit":
