@@ -1,5 +1,5 @@
 import sqlite3
-
+import activitymanager
 conn = sqlite3.connect("/home/galen/data/freetime_eliminator.db")
 
 cursor = conn.cursor()
@@ -13,10 +13,16 @@ def getTaskID(tablename):
     cursor.execute(tableRows)
     return(len(cursor.fetchall()))
 
-def displayTables():
-    getTables = f"SELECT name FROM sqlite_master WHERE type='table'"
-    cursor.execute(getTables)
-    print(str(cursor.fetchall()))
+# def displayTables():
+#     getTables = f"SELECT name FROM sqlite_master WHERE type='table'"
+#     cursor.execute(getTables)
+#     print(str(cursor.fetchall()))
+
+def returnTables():
+    tables = f"SELECT name FROM sqlite_master WHERE type='table'"
+    cursor.execute(tables)
+    tables = cursor.fetchall()
+    return [table[0] for table in tables]
 
 def taskCreator():
     task = input("you have chosen to add a task: \nTask Name: ")
@@ -64,6 +70,12 @@ def displayTasks(specific):
                 print("" + str(e))
     else:
         print("im supposed to display all tables and their options")
+        tableList = returnTables()
+        for tableName in tableList:
+            print(tableName)
+            displayTables = f"SELECT * FROM {tableName}"
+            cursor.execute(displayTables)
+            print(str(cursor.fetchall()) + "\n")
 
 print("Hello there! Do you have some free time you'd like to get rid of? Well never fear, the FreeTimeAssassin is here!")
 
@@ -86,7 +98,7 @@ while True:
             while True:
                 check = input("Did you have a specific category in mind? (Y/n)(Enter L to list categories)")
                 if check == "L":
-                    displayTables()
+                    activitymanager.displayTables()
                 elif check == "y":
                     displayTasks(specific)
                     break
