@@ -29,10 +29,10 @@ def activityCreator():
     minutes = int(input("How many minutes will it take?"))
     tableCreate = f"CREATE TABLE IF NOT EXISTS {taskcat}(id integer NOT NULL, name text NOT NULL, minutes integer NOT NULL)"
     cursor.execute(tableCreate)
-    taskID = getTaskID(taskcat) + 1
+    taskID = getActivityID(taskcat) + 1
     addTask = f"INSERT INTO {taskcat} (id, name, minutes) VALUES (?, ?, ?)"
     cursor.execute(addTask, (taskID, task, minutes))
-    taskCount = getTaskID(taskcat)
+    taskCount = getActivityID(taskcat)
     print("There are now " + str(taskCount) + " tasks in the table " + taskcat)
 #getTaskID("zombieapocalypse")
 
@@ -64,7 +64,7 @@ def displayActivities(specific):
                 cursor.execute(displaySQL)
                 result = cursor.fetchall()
                 print(str(result) + "\n")
-                break
+                return display
             except sqlite3.Error as e:
                 print("" + str(e))
     else:
@@ -75,6 +75,18 @@ def displayActivities(specific):
             displayTables = f"SELECT * FROM {tableName}"
             cursor.execute(displayTables)
             print(str(cursor.fetchall()) + "\n")
+
+def deleteActivity(specific):
+    if not specific:
+        print("here are all the possible categories and activities")
+        displayActivities(specific)
+        specific = not specific
+    tableName = displayActivities(specific)
+    sacrifice = int(sanitaryInput("now... what is the id of the task you would like to delete?\n"))
+    deleteSQL = f"DELETE FROM {tableName} WHERE id={sacrifice}"
+    cursor.execute(deleteSQL)
+    print(str(cursor.fetchall())+"\n")
+
 
 print("Hello there! Do you have some free time you'd like to get rid of? Well never fear, the FreeTimeAssassin is here!")
 
@@ -105,8 +117,15 @@ while True:
                     specific = False
                     displayActivities(specific)
                     break
-        if int(option) == 2:
+        elif int(option) == 2:
             activityCreator()
+        elif int(option) == 3:
+            choice = input("I am the activity deleter... \nDid you have a specific category in mind?")
+            if choice == "yes":
+                specific = True
+            else:
+                specific = False
+            deleteActivity(specific)
     elif int(selection) ==3:
         print("Project Manager: You can...\n1.) Add new project\n2.) View existing projects\n3.) Edit Existing Projects")
     elif selection == "e" or selection == "exit":
@@ -116,12 +135,7 @@ while True:
         print("sorry I dont understand")
     # //cursor.execute('''CREATE TABLE IF NOT EXISTS '''
     # )
-    # cursor.execute('''CREATE TABLE IF NOT EXISTS activity(id integer NOT NULL, type text NOT NULL, project text, name text NOT NULL)''');
-    # display = input('what table do you want the tasks from?\n')
-    # displaySQL = f"SELECT * FROM {display}"
-    # cursor.execute(displaySQL)
-    # result = cursor.fetchall()
-    # print(result)
+    # cursor.execute('''CREATE TABLE IF NOT EXISTS activity(id integer NOT NULL, type text NOT NULL, project text, name text NOT NULL)'''); # display = input('what table do you want the tasks from?\n') # displaySQL = f"SELECT * FROM {display}" # cursor.execute(displaySQL) # result = cursor.fetchall() # print(result)
 
 conn.commit()
 
