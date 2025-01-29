@@ -1,4 +1,5 @@
 import sqlite3
+import random
 conn = sqlite3.connect("/home/galen/data/freetime_eliminator.db")
 
 cursor = conn.cursor()
@@ -87,6 +88,23 @@ def deleteActivity(specific):
     cursor.execute(deleteSQL)
     print(str(cursor.fetchall())+"\n")
 
+def generateProjectName():
+    catList = returnTables()
+    numCategories = (len(catList))
+    catChoice = random.randint(0, numCategories)
+    return (catList[catChoice-1])
+
+def generator(randomBool):
+    if randomBool:
+        chosenCategory = generateProjectName()
+        print(chosenCategory)
+        displayActivities = f"SELECT * FROM {chosenCategory}"
+        cursor.execute(displayActivities)
+        activityList = cursor.fetchall()
+        numActivities = (len(activityList))
+        actChoice = random.randint(0, numActivities)
+        choice = (activityList[actChoice-1])
+        print(choice)
 
 print("Hello there! Do you have some free time you'd like to get rid of? Well never fear, the FreeTimeAssassin is here!")
 
@@ -102,6 +120,11 @@ while True:
         break
     elif int(selection) == 1:
         generate = input("I am the generator (not ai though)... I can generate anything you like...\n1.) random task \n2.) project task \nWhat would you like?\n")
+        if int(generate) == 1:
+            activity = generator(True)
+            print(activity)
+        else:
+            print("coming soon")
     elif int(selection) == 2:
         option = input("This is the task manager!\nWhat would you like to do?\n1.) Display Current Tasks \n2.) Add Task\n3.) Delete Task ")
         if int(option) ==   1:
