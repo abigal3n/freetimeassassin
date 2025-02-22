@@ -1,6 +1,6 @@
 import sqlite3
 import random
-conn = sqlite3.connect("/home/galen/data/freetime_eliminator.db")
+conn = sqlite3.connect("/home/galen/data/freetime_assassin.db")
 
 cursor = conn.cursor()
 
@@ -103,7 +103,7 @@ def generator(randomBool):
         activityList = cursor.fetchall()
         numActivities = (len(activityList))
         actChoice = random.randint(0, numActivities)
-        choice = (activityList[actChoice-1])
+        choice = (activityList[actChoice - 1])
         print(choice)
 
 print("Hello there! Do you have some free time you'd like to get rid of? Well never fear, the FreeTimeAssassin is here!")
